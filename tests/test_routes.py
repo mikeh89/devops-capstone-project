@@ -124,3 +124,17 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     # ADD YOUR TEST CASES HERE ...
+
+    def test_get_accounts(self):
+        """It should List all Accounts"""
+        # create accounts
+        self._create_accounts(5)
+
+        # GET request to list accounts
+        response = self.client.get(
+            BASE_URL
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        # check count of accounts created matches accounts in response
+        self.assertEqual(len(data), 5)
