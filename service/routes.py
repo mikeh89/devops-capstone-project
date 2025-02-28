@@ -88,7 +88,7 @@ def get_accounts():
 def read_account(id):
     """
     Read an Account
-    This endpoint will return a single Account based on account_id
+    This endpoint will return a single Account based on id
     """
     app.logger.info("Request to read account with ID: [%s]", id)
 
@@ -104,7 +104,24 @@ def read_account(id):
 ######################################################################
 
 # ... place you code here to UPDATE an account ...
+@app.route("/accounts/<id>", methods=["PUT"])
+def update_account(id):
+    """
+    Update an Account
+    This endpoint will Update an existing Account based on id
+    """
+    app.logger.info("Request to update account with ID: [%s]", id)
+    check_content_type("application/json")
 
+    account = Account.find(id)
+    if not account:
+        abort(status.HTTP_404_NOT_FOUND, f"Account with id: '{id}' not found")
+
+    app.logger.info("Updating account: %s", id)
+    account.deserialize(request.get_json())
+    account.id = id
+    account.update()
+    return account.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # DELETE AN ACCOUNT
