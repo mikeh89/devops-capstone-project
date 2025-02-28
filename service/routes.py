@@ -137,7 +137,6 @@ def delete_account(id):
     app.logger.info("Request to delete account with ID: [%s]", id)
 
     account = Account.find(id)
-
     if not account:
         abort(status.HTTP_404_NOT_FOUND, f"Account with id: '{id}' not found")
 
