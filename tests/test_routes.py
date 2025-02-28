@@ -157,23 +157,6 @@ class TestAccountService(TestCase):
         self.assertEqual(data["phone_number"], account.phone_number)
         self.assertEqual(data["date_joined"], str(account.date_joined))
 
-    def test_account_not_found(self):
-        """It should return a 404 when no account"""
-        # test read function
-        resp = self.client.get(
-            f"{BASE_URL}/0"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        
-        # test update function
-        test_account = AccountFactory()
-        resp = self.client.put(
-            f"{BASE_URL}/0",
-            json=test_account.serialize(),
-            content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_update_account(self):
         """It should Update an existing Account"""
         test_account = AccountFactory()
@@ -197,3 +180,44 @@ class TestAccountService(TestCase):
         updated_account = resp.get_json()
 
         self.assertEqual(updated_account["name"], "anonymous")
+
+    def test_delete_account(self):
+        """It should Delete an existing Account"""
+        account = self._create_accounts(1)[0]
+
+        resp = self.client.delete(
+            f"{BASE_URL}/{account.id}"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+    # Test error handlers
+
+    def test_account_not_found(self):
+        """It should return a 404 when no account"""
+        # test read function
+        resp = self.client.get(
+            f"{BASE_URL}/0"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        
+        # test update function
+        test_account = AccountFactory()
+        resp = self.client.put(
+            f"{BASE_URL}/0",
+            json=test_account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+        # test delete function
+        resp = self.client.delete(
+            f"{BASE_URL}/0"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_method_not_allowed(self):
+        """It should not allow an illegal method call"""
+        resp = self.client.delete(
+            BASE_URL
+        )
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
