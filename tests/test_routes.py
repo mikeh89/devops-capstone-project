@@ -138,3 +138,28 @@ class TestAccountService(TestCase):
         data = response.get_json()
         # check count of accounts created matches accounts in response
         self.assertEqual(len(data), 5)
+
+    def test_read_account(self):
+        """It should Read a single Account"""
+        # Create account
+        account = self._create_accounts(1)[0]
+
+        # Get it back from service
+        resp = self.client.get(
+            f"{BASE_URL}/{account.id}"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        # Check values match
+        self.assertEqual(data["name"], account.name)
+        self.assertEqual(data["email"], account.email)
+        self.assertEqual(data["address"], account.address)
+        self.assertEqual(data["phone_number"], account.phone_number)
+        self.assertEqual(data["date_joined"], str(account.date_joined))
+
+    def test_account_not_found(self):
+        """It should return a 404 when no account"""
+        resp = self.client.get(
+            f"{BASE_URL}/0"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
