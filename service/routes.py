@@ -63,6 +63,7 @@ def create_accounts():
 
 # ... place you code here to LIST accounts ...
 
+
 @app.route("/accounts", methods=["GET"])
 def get_accounts():
     """
@@ -70,7 +71,7 @@ def get_accounts():
     This endpoint will return all exsiting Accounts
     """
     app.logger.info("Request to list Accounts")
-    
+
     accounts = Account.all()
     account_list = [account.serialize() for account in accounts]
 
@@ -104,6 +105,7 @@ def read_account(id):
 ######################################################################
 
 # ... place you code here to UPDATE an account ...
+
 @app.route("/accounts/<id>", methods=["PUT"])
 def update_account(id):
     """
@@ -128,6 +130,7 @@ def update_account(id):
 ######################################################################
 
 # ... place you code here to DELETE an account ...
+
 @app.route("/accounts/<id>", methods=["DELETE"])
 def delete_account(id):
     """
@@ -143,7 +146,7 @@ def delete_account(id):
     app.logger.info("Deleting account: %s", id)
     account.delete()
     return "", status.HTTP_204_NO_CONTENT
-    
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
