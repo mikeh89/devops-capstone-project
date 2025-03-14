@@ -179,7 +179,7 @@ class TestAccountService(TestCase):
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        
+
         updated_account = resp.get_json()
 
         self.assertEqual(updated_account["name"], "anonymous")
@@ -202,7 +202,7 @@ class TestAccountService(TestCase):
             f"{BASE_URL}/0"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        
+
         # test update function
         test_account = AccountFactory()
         resp = self.client.put(
